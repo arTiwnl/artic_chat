@@ -4,27 +4,41 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/TutorialEdge/realtime-chat-go-react/pkg/websocket"
+	"https://github.com/arTiwnl/artic_chat/tree/master/backend/pkg/websocket"
 )
 
 // definindo o endpoint da lib websocket
 
-func serveWs(w http.ResponseWriter, r *http.Request) {
-	ws, err := websocket.Upgrade(w, r)
+func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint hit")
+	conn, err := websocket.Upgrade(w,r)
 	if err != nil {
-		fmt.Fprintf(w, "%+V\n", err)
+		fmt.Fprintf(w, "%+\n", err)
 	}
-	go websocket.Writer(ws)
-	websocket.Reader(ws)
+	client := &websocket.Client {
+		Conn: conn,
+		Pool: pool,
+	}
+
+	pool.Register <- client
+	client.Read()
 }
 
 func setupRoutes() {
 	// mapeando o endpoint /ws para a funçao a seguir
-	http.HandleFunc("/ws", serveWs)
+	pool := websocket.NewPool()
+	go pool.Start()
+
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(pool, w, r)
+	})
 }
 
+
+
+// rota de saida //
 func main() {
-	fmt.Println("Chat App v.01")
+	fmt.Println("Chat App v.04")
 	setupRoutes()
-	http.ListenAndServe(":8000", nil)
+	http.ListenAndServe(":3000", nil)
 }
