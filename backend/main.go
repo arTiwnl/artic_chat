@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"https://github.com/arTiwnl/artic_chat/tree/master/backend/pkg/websocket"
+	"github.com/TutorialEdge/realtime-chat-go-react/pkg/websocket"
+
 )
 
 // definindo o endpoint da lib websocket

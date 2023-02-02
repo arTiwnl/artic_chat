@@ -1,4 +1,4 @@
-module github.com/arTiwnl/artic_chat/tree/master/backend/pkg/websocket
+module github.com/TutorialEdge/realtime-chat-go-react
 
 go 1.19
 
